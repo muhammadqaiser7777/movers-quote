@@ -6,7 +6,7 @@
   position: relative;
   height: 70vh;
   min-height: 500px;
-  background: url('/assets/images/roofing-4.jpg') no-repeat center center;
+  background: url('/assets/images/moving-4.jpg') no-repeat center center;
   background-size: cover;
   background-attachment: fixed;
   display: flex;
@@ -20,7 +20,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(36, 106, 115, 0.7) 0%, rgba(54, 143, 139, 0.7) 50%, rgba(74, 158, 255, 0.7) 100%);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.7) 0%, rgba(249, 115, 22, 0.7) 100%);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -95,7 +95,7 @@
 
 .section-header h2 {
   font-size: 2.5rem;
-  color: #246A73;
+  color: #1e3a8a;
   margin-bottom: 1rem;
   font-weight: 700;
 }
@@ -117,20 +117,21 @@
 .contact-card {
   background: white;
   border-radius: 20px;
+  color: #f97316;
   padding: 2.5rem;
   box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
   transition: all 0.4s ease;
-  border: 1px solid rgba(54, 143, 139, 0.1);
+  border: 1px solid rgba(249, 115, 22, 0.1);
 }
 
 .contact-card:hover {
   transform: translateY(-10px);
   box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-  border-color: rgba(54, 143, 139, 0.3);
+  border-color: rgba(249, 115, 22, 0.3);
 }
 
 .contact-card.primary {
-  background: linear-gradient(135deg, #368F8B 0%, #4a9eff 100%);
+  background: linear-gradient(135deg, #f97316 0%, #3b82f6 100%);
   color: white;
   grid-column: 1 / -1;
 }
@@ -148,7 +149,7 @@
 .card-icon {
   width: 70px;
   height: 70px;
-  background: linear-gradient(135deg, #368F8B 0%, #4a9eff 100%);
+  background: linear-gradient(135deg, #f97316 0%, #3b82f6 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -160,7 +161,7 @@
 
 .contact-card:not(.primary) .card-icon {
   background: linear-gradient(135deg, #f8f9fa 0%, #e8f4f8 100%);
-  color: #368F8B;
+  color: #f97316;
 }
 
 .contact-card h3 {
@@ -175,14 +176,14 @@
 }
 
 .contact-card a {
-  color: #368F8B;
+  color: #f97316;
   text-decoration: none;
   font-weight: 500;
   transition: color 0.3s ease;
 }
 
 .contact-card a:hover {
-  color: #246A73;
+  color: #1e3a8a;
 }
 
 .response-time {
@@ -195,7 +196,7 @@
   display: inline-block;
   margin-top: 1rem;
   padding: 0.8rem 1.5rem;
-  border: 2px solid #368F8B;
+  border: 2px solid #f97316;
   border-radius: 25px;
   text-decoration: none;
   font-weight: 600;
@@ -203,7 +204,7 @@
 }
 
 .card-link:hover {
-  background: rgba(54, 143, 139, 0.1);
+  background: rgba(249, 115, 22, 0.1);
   transform: translateY(-2px);
 }
 
@@ -453,7 +454,7 @@
   text-align: center;
   margin-bottom: 3rem;
   padding: 3rem 2rem;
-  background: linear-gradient(135deg, rgba(36, 106, 115, 0.9) 0%, rgba(54, 143, 139, 0.9) 100%);
+  background: linear-gradient(135deg, rgba(30, 58, 138, 0.9) 0%, rgba(249, 115, 22, 0.9) 100%);
   color: white;
   border-radius: 20px;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
@@ -492,7 +493,7 @@
 
 .contact-form-section h2 {
   font-size: 2rem;
-  color: #246A73;
+  color: #1e3a8a;
   margin-bottom: 2rem;
   text-align: center;
 }
@@ -529,7 +530,8 @@
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-  border-color: #368F8B;
+  border-color: #f97316;
+  box-shadow: 0 0 0 3px rgba(54, 143, 139, 0.2);
   box-shadow: 0 0 0 3px rgba(54, 143, 139, 0.2);
   outline: none;
 }
@@ -540,8 +542,8 @@
 }
 
 .submit-btn {
-  background: linear-gradient(135deg, #368F8B 0%, #4a9eff 100%);
-  color: white;
+  background: linear-gradient(135deg, #f97316 0%, #3b82f6 100%);
+  color: #f97316;
   border: none;
   padding: 1rem 2rem;
   border-radius: 25px;
@@ -549,13 +551,13 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(54, 143, 139, 0.3);
+  box-shadow: 0 4px 15px rgba(249, 115, 22, 0.3);
   margin-top: 1rem;
 }
 
 .submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(54, 143, 139, 0.4);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.4);
 }
 
 .submit-btn:disabled {
@@ -592,18 +594,18 @@
 .info-icon {
   width: 50px;
   height: 50px;
-  background: linear-gradient(135deg, #368F8B 0%, #4a9eff 100%);
+  background: linear-gradient(135deg, #f97316 0%, #3b82f6 100%);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 1rem;
-  color: white;
+  color: #f97316;
 }
 
 .info-card h3 {
   font-size: 1.3rem;
-  color: #246A73;
+  color: #1e3a8a;
   margin-bottom: 1rem;
 }
 
@@ -614,7 +616,7 @@
 }
 
 .info-card a {
-  color: #368F8B;
+  color: #f97316;
   text-decoration: none;
   font-weight: 500;
 }
@@ -647,7 +649,7 @@
 }
 
 .message-content h3 {
-  color: #246A73;
+  color: #1e3a8a;
   margin-bottom: 1rem;
 }
 
@@ -658,8 +660,8 @@
 }
 
 .close-btn {
-  background: #368F8B;
-  color: white;
+  background: #f97316;
+  color: #f97316;
   border: none;
   padding: 0.8rem 1.5rem;
   border-radius: 25px;
@@ -669,7 +671,7 @@
 }
 
 .close-btn:hover {
-  background: #246A73;
+  background: #1e3a8a;
 }
 
 /* Responsive Design */

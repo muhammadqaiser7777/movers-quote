@@ -16,8 +16,8 @@ interface FaqItem {
 export class Faq {
   faqs: FaqItem[] = [
     {
-      question: 'How does the roofing quote process work?',
-      answer: 'Fill out our detailed form with your roofing project information. We securely process your data and connect you with trusted contractors in your area who will provide personalized quotes.',
+      question: 'How does the movers-quote process work?',
+      answer: 'Fill out our detailed form with your moving project information. We securely process your data and connect you with trusted contractors in your area who will provide personalized quotes.',
       isOpen: false
     },
     {
@@ -27,7 +27,7 @@ export class Faq {
     },
     {
       question: 'How do you select contractors?',
-      answer: 'We partner only with experienced, trusted roofing professionals who have proven track records, positive customer reviews, and meet our quality standards. All contractors undergo background checks.',
+      answer: 'We partner only with experienced, trusted moving professionals who have proven track records, positive customer reviews, and meet our quality standards. All contractors undergo background checks.',
       isOpen: false
     },
     {
@@ -36,8 +36,8 @@ export class Faq {
       isOpen: false
     },
     {
-      question: 'What types of roofing services do you cover?',
-      answer: 'We cover all major roofing services including installation, repair, replacement, maintenance, and emergency repairs for various roof types like asphalt shingle, metal, tile, and flat roofs.',
+      question: 'What types of moving services do you cover?',
+      answer: 'We cover all major moving services including local and state to state moving.',
       isOpen: false
     },
 
@@ -53,7 +53,7 @@ export class Faq {
     },
     {
       question: 'What information do I need to provide?',
-      answer: 'Basic project details including roof type, property type, project nature (install/repair/replace), timeline, and contact information. More details help contractors provide accurate quotes.',
+      answer: 'Basic project details including moving distance, address and date.',
       isOpen: false
     }
   ];

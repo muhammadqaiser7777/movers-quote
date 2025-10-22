@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Router } from '@angular/router';
+import { lastValueFrom } from 'rxjs';
 
 @Component({
   selector: 'app-form',
@@ -12,8 +13,7 @@ import { Router } from '@angular/router';
 })
 export class Form implements OnInit {
   currentStep: number = 1;
-  totalSteps: number = 9;
-  roofingType: string = '';
+  totalSteps: number = 10;
   ProjectNature: string = '';
   homeOwner: string = '';
   propertyType: string = '';
@@ -166,6 +166,73 @@ export class Form implements OnInit {
 
   errors: { [key: string]: string } = {};
 
+  // Add new properties at the top with other properties
+  fromState: string = '';
+  fromZip: string = '';
+  toState: string = '';
+  toZip: string = '';
+  isSwapped: boolean = false;
+  MovingDate: string = '';
+  moversSize: string = '';
+  movingDistance: string = '';
+
+  // Add state lists after other properties
+  alaskaHawaiiStates = [
+    { code: 'AK', name: 'Alaska' },
+    { code: 'HI', name: 'Hawaii' }
+  ];
+
+  mainlandStates = [
+    { code: 'AL', name: 'Alabama' },
+    { code: 'AZ', name: 'Arizona' },
+    { code: 'AR', name: 'Arkansas' },
+    { code: 'CA', name: 'California' },
+    { code: 'CO', name: 'Colorado' },
+    { code: 'CT', name: 'Connecticut' },
+    { code: 'DE', name: 'Delaware' },
+    { code: 'FL', name: 'Florida' },
+    { code: 'GA', name: 'Georgia' },
+    { code: 'ID', name: 'Idaho' },
+    { code: 'IL', name: 'Illinois' },
+    { code: 'IN', name: 'Indiana' },
+    { code: 'IA', name: 'Iowa' },
+    { code: 'KS', name: 'Kansas' },
+    { code: 'KY', name: 'Kentucky' },
+    { code: 'LA', name: 'Louisiana' },
+    { code: 'ME', name: 'Maine' },
+    { code: 'MD', name: 'Maryland' },
+    { code: 'MA', name: 'Massachusetts' },
+    { code: 'MI', name: 'Michigan' },
+    { code: 'MN', name: 'Minnesota' },
+    { code: 'MS', name: 'Mississippi' },
+    { code: 'MO', name: 'Missouri' },
+    { code: 'MT', name: 'Montana' },
+    { code: 'NE', name: 'Nebraska' },
+    { code: 'NV', name: 'Nevada' },
+    { code: 'NH', name: 'New Hampshire' },
+    { code: 'NJ', name: 'New Jersey' },
+    { code: 'NM', name: 'New Mexico' },
+    { code: 'NY', name: 'New York' },
+    { code: 'NC', name: 'North Carolina' },
+    { code: 'ND', name: 'North Dakota' },
+    { code: 'OH', name: 'Ohio' },
+    { code: 'OK', name: 'Oklahoma' },
+    { code: 'OR', name: 'Oregon' },
+    { code: 'PA', name: 'Pennsylvania' },
+    { code: 'RI', name: 'Rhode Island' },
+    { code: 'SC', name: 'South Carolina' },
+    { code: 'SD', name: 'South Dakota' },
+    { code: 'TN', name: 'Tennessee' },
+    { code: 'TX', name: 'Texas' },
+    { code: 'UT', name: 'Utah' },
+    { code: 'VT', name: 'Vermont' },
+    { code: 'VA', name: 'Virginia' },
+    { code: 'WA', name: 'Washington' },
+    { code: 'WV', name: 'West Virginia' },
+    { code: 'WI', name: 'Wisconsin' },
+    { code: 'WY', name: 'Wyoming' }
+  ];
+
   constructor(private http: HttpClient, private router: Router, private renderer: Renderer2, private el: ElementRef) {}
 
   ngOnInit() {
@@ -202,9 +269,9 @@ export class Form implements OnInit {
     }
   }
 
-  nextStep() {
+  async nextStep() {
     this.errors = {};
- 
+
     // Inject TrustedForm script if not present, like in handleChange
     if (!document.querySelector("script[src*='trustedform.com/trustedform.js?field=xxTrustedFormCertUrl']")) {
       (function() {
@@ -226,7 +293,7 @@ export class Form implements OnInit {
         this.xxTrustedFormCertUrl = (certInput as HTMLInputElement).value;
       }
     }, 500);
-    if (this.currentStep === 5) {
+    if (this.currentStep === 6) {
       // Validate phone first
       let phoneValid = true;
       if (!this.phone.trim()) {
@@ -255,8 +322,9 @@ export class Form implements OnInit {
           }
         });
       }
-    } else if (this.currentStep === 6) {
-      if (this.validateCurrentStep()) {
+    } else if (this.currentStep === 7) {
+      const valid = await this.validateCurrentStep();
+      if (valid) {
         this.isValidatingZip = true;
         this.http.get(`https://steermarketeer.com/api/a9f3b2c1e7d4?zip=${this.zip}`).subscribe({
           next: (data: any) => {
@@ -315,9 +383,12 @@ export class Form implements OnInit {
           }
         }
       });
-    } else if (this.validateCurrentStep()) {
-      if (this.currentStep < this.totalSteps) {
-        this.currentStep++;
+    } else {
+      const valid = await this.validateCurrentStep();
+      if (valid) {
+        if (this.currentStep < this.totalSteps) {
+          this.currentStep++;
+        }
       }
     }
   }
@@ -328,18 +399,87 @@ export class Form implements OnInit {
     }
   }
 
-  validateCurrentStep(): boolean {
+  // Replace the first step validation in validateCurrentStep method
+  async validateCurrentStep(): Promise<boolean> {
     let valid = true;
     if (this.currentStep === 1) {
-      if (!this.roofingType) {
-        this.errors['roofingType'] = 'Please select a roofing material.';
+      if (!this.fromState) {
+        this.errors['fromState'] = 'Please select origin state.';
         valid = false;
       }
-      if (!this.ProjectNature) {
-        this.errors['ProjectNature'] = 'Please select the nature of your project.';
+      if (!this.fromZip.trim()) {
+        this.errors['fromZip'] = 'Please enter origin zip code.';
         valid = false;
+      } else if (this.fromZip.length !== 5) {
+        this.errors['fromZip'] = 'Origin zip code must be 5 digits.';
+        valid = false;
+      }
+
+      if (!this.toState) {
+        this.errors['toState'] = 'Please select destination state.';
+        valid = false;
+      }
+      if (!this.toZip.trim()) {
+        this.errors['toZip'] = 'Please enter destination zip code.';
+        valid = false;
+      } else if (this.toZip.length !== 5) {
+        this.errors['toZip'] = 'Destination zip code must be 5 digits.';
+        valid = false;
+      }
+
+      if (valid) {
+        this.isValidatingZip = true;
+        try {
+          // Validate fromZip
+          const fromData: any = await lastValueFrom(this.http.get(`https://steermarketeer.com/api/a9f3b2c1e7d4?zip=${this.fromZip}`));
+          if (fromData.state_name === 'Unknown') {
+            this.errors['fromZip'] = 'Invalid origin zip code.';
+            this.isValidatingZip = false;
+            return false;
+          } else if (fromData.zip_state !== this.fromState) {
+            this.errors['fromZip'] = 'Invalid origin zip code for selected state.';
+            this.isValidatingZip = false;
+            return false;
+          }
+
+          // Validate toZip
+          const toData: any = await lastValueFrom(this.http.get(`https://steermarketeer.com/api/a9f3b2c1e7d4?zip=${this.toZip}`));
+          if (toData.state_name === 'Unknown') {
+            this.errors['toZip'] = 'Invalid destination zip code.';
+            this.isValidatingZip = false;
+            return false;
+          } else if (toData.zip_state !== this.toState) {
+            this.errors['toZip'] = 'Invalid destination zip code for selected state.';
+            this.isValidatingZip = false;
+            return false;
+          }
+
+          this.isValidatingZip = false;
+          return true;
+        } catch (error) {
+          // If API fails, allow user to proceed
+          this.isValidatingZip = false;
+          return true;
+        }
       }
     } else if (this.currentStep === 2) {
+      if (!this.MovingDate) {
+        this.errors['MovingDate'] = 'Please select a moving date.';
+        valid = false;
+      } else {
+        const selectedDate = new Date(this.MovingDate);
+        const minDate = new Date();
+        minDate.setDate(minDate.getDate() + 1);
+        if (selectedDate < minDate) {
+          this.errors['MovingDate'] = 'Moving date must be in the future.';
+          valid = false;
+        }
+      }
+      if (!this.moversSize) {
+        this.errors['moversSize'] = 'Please select the movers size.';
+        valid = false;
+      }
+    } else if (this.currentStep === 3) {
       if (!this.ProjectStatus) {
         this.errors['ProjectStatus'] = 'Please select the project status.';
         valid = false;
@@ -348,16 +488,16 @@ export class Form implements OnInit {
         this.errors['Purchasetimeframe'] = 'Please select the purchase time frame.';
         valid = false;
       }
-    } else if (this.currentStep === 3) {
-      if (!this.homeOwner) {
-        this.errors['homeOwner'] = 'Please select if you are a home owner.';
-        valid = false;
-      }
+    } else if (this.currentStep === 4) {
       if (!this.propertyType) {
         this.errors['propertyType'] = 'Please select the property type.';
         valid = false;
       }
-    } else if (this.currentStep === 4) {
+      if (!this.homeOwner) {
+        this.errors['homeOwner'] = 'Please select if you are a home owner.';
+        valid = false;
+      }
+    } else if (this.currentStep === 5) {
       if (!this.firstName.trim()) {
         this.errors['firstName'] = 'Please enter your first name.';
         valid = false;
@@ -372,7 +512,7 @@ export class Form implements OnInit {
         this.errors['lastName'] = 'Last name must contain only letters.';
         valid = false;
       }
-    } else if (this.currentStep === 5) {
+    } else if (this.currentStep === 6) {
       if (!this.phone.trim()) {
         this.errors['phone'] = 'Please enter your phone number.';
         valid = false;
@@ -386,7 +526,7 @@ export class Form implements OnInit {
           valid = false;
         }
       }
-    } else if (this.currentStep === 6) {
+    } else if (this.currentStep === 7) {
       if (!this.state) {
         this.errors['state'] = 'Please select your state.';
         valid = false;
@@ -394,11 +534,11 @@ export class Form implements OnInit {
       if (!this.zip.trim()) {
         this.errors['zip'] = 'Please enter your zip code.';
         valid = false;
-      } else if (!/^\d{5}$/.test(this.zip)) {
+      } else if (this.zip.length !== 5) {
         this.errors['zip'] = 'Zip code must be 5 digits.';
         valid = false;
       }
-    } else if (this.currentStep === 7) {
+    } else if (this.currentStep === 8) {
       if (!this.city.trim()) {
         this.errors['city'] = 'Please enter your city.';
         valid = false;
@@ -407,7 +547,7 @@ export class Form implements OnInit {
         this.errors['address'] = 'Please enter your address.';
         valid = false;
       }
-    } else if (this.currentStep === 8) {
+    } else if (this.currentStep === 9) {
       if (!this.Timetocall.trim()) {
         this.errors['Timetocall'] = 'Please select the best time to call.';
         valid = false;
@@ -416,7 +556,7 @@ export class Form implements OnInit {
         this.errors['BriefRequirement'] = 'Please provide a brief description.';
         valid = false;
       }
-    } else if (this.currentStep === 9) {
+    } else if (this.currentStep === 10) {
       if (!this.agreement) {
         this.errors['agreement'] = 'You must agree to the terms and conditions.';
         valid = false;
@@ -448,6 +588,21 @@ export class Form implements OnInit {
     this.phone = this.phone.replace(/\D/g, '').substring(0, 10);
   }
 
+  onZipKeyPress(event: KeyboardEvent) {
+    const charCode = event.which ? event.which : event.keyCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
+  }
+
+  onZipInput(type: 'from' | 'to') {
+    if (type === 'from') {
+      this.fromZip = this.fromZip.replace(/\D/g, '').substring(0, 5);
+    } else {
+      this.toZip = this.toZip.replace(/\D/g, '').substring(0, 5);
+    }
+  }
+
   validateEmailFormat(): boolean {
     if (!this.email.trim()) {
       this.errors['email'] = 'Please enter your email.';
@@ -463,7 +618,7 @@ export class Form implements OnInit {
   async validateEmailDomain(): Promise<boolean> {
     const domain = this.email.split('@')[1];
     try {
-      const response = await this.http.get(`https://8.8.8.8/resolve?name=${domain}&type=MX`).toPromise();
+      const response = await lastValueFrom(this.http.get(`https://8.8.8.8/resolve?name=${domain}&type=MX`));
       return (response as any).Status !== 3;
     } catch {
       return false;
@@ -472,7 +627,8 @@ export class Form implements OnInit {
 
   async submit() {
     this.errors = {};
-    if (this.validateCurrentStep()) {
+    const valid = await this.validateCurrentStep();
+    if (valid) {
       this.isSubmitting = true;
       
       // Read values from DOM
@@ -480,7 +636,6 @@ export class Form implements OnInit {
       this.xxTrustedFormCertUrl = (document.querySelector('input[name="xxTrustedFormCertUrl"]') as HTMLInputElement)?.value || '';
 
       const payload = {
-        roofingType: parseInt(this.roofingType),
         ProjectNature: parseInt(this.ProjectNature),
         homeOwner: parseInt(this.homeOwner),
         Propertytype: parseInt(this.propertyType),
@@ -503,11 +658,17 @@ export class Form implements OnInit {
         aff_id: this.aff_id,
         transaction_id: this.transaction_id,
         sub_aff_id: this.sub_aff_id,
+        MovingDate: this.MovingDate,
+        moversSize: parseInt(this.moversSize),
+        fromState: this.fromState,
+        Moverszip: this.fromZip,
+        toState: this.toState,
+        Moverszip2: this.toZip,
         url: window.location.href,
         browser: navigator.userAgent
       };
       
-      this.http.post('https://get-roofing.com/api/ping-proxy.php', payload).subscribe({
+      this.http.post('https://movers-quote.com/api/ping-proxy.php', payload).subscribe({
         next: (response) => {
           this.isSubmitting = false;
           this.showThankYou = true;
@@ -666,5 +827,45 @@ export class Form implements OnInit {
       window.addEventListener("beforeunload", recordTrustedFormPing);
     `;
     document.body.appendChild(trustedFormPingScript);
+  }
+
+  // Add new methods before validateCurrentStep
+  swapLocations() {
+    const tempState = this.fromState;
+    this.fromState = this.toState;
+    this.toState = tempState;
+    this.isSwapped = !this.isSwapped;
+  }
+
+  getAvailableFromStates(): any[] {
+    // If swapped, Moving From should have only HI/AK, otherwise all states except HI/AK
+    return this.isSwapped ? this.alaskaHawaiiStates : this.mainlandStates;
+  }
+
+  getAvailableToStates(): any[] {
+    // If swapped, Moving To should have all states except HI/AK, otherwise only HI/AK
+    return this.isSwapped ? this.mainlandStates : this.alaskaHawaiiStates;
+  }
+
+  getMinDate(): string {
+    const today = new Date();
+    const tomorrow = new Date(today);
+    tomorrow.setDate(today.getDate() + 1);
+    return tomorrow.toISOString().split('T')[0];
+  }
+
+  useSourceLocation() {
+    this.state = this.fromState;
+    this.zip = this.fromZip;
+  }
+
+  useDestinationLocation() {
+    this.state = this.toState;
+    this.zip = this.toZip;
+  }
+
+  useCustomLocation() {
+    this.state = '';
+    this.zip = '';
   }
 }

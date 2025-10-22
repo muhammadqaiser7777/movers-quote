@@ -2,12 +2,12 @@
 .policies-container {
   width: 100%;
   padding: 2rem 0;
-  background: #246A73;
+  background: linear-gradient(135deg, #1e3a8a 0%, #f97316 100%);
   display: flex;
   flex-direction: column;
   align-items: center;
   font-family: 'Marcellus', serif;
-  color: #160F29;
+  color: #1e3a8a;
 }
 
 /* ---------- TABS WRAPPER ---------- */
@@ -27,7 +27,7 @@
   align-items: center;
   gap: 0.75rem;
   background: #ffffff;
-  color: #160F29;
+  color: #1e3a8a;
   border: 2px solid #d1d5db;
   padding: 0.9rem 2rem;
   font-size: 1rem;
@@ -66,9 +66,9 @@
 
 /* Hover Effects */
 .tab-btn:hover {
-  background: #368F8B; /* Accent */
+  background: linear-gradient(135deg, #f97316 0%, #3b82f6 100%); /* Orange-blue gradient */
   color: #ffffff;
-  border-color: #368F8B;
+  border-color: #f97316;
   transform: translateY(-3px);
   box-shadow: 0 4px 12px rgba(54, 143, 139, 0.3);
 }
@@ -79,9 +79,9 @@
 
 /* Active Button */
 .tab-btn.active {
-  background: #160F29; /* Primary */
+  background: linear-gradient(135deg, #1e3a8a 0%, #f97316 100%); /* Orange-blue gradient */
   color: #ffffff;
-  border-color: #160F29;
+  border-color: #1e3a8a;
   font-weight: 600;
   transform: scale(1.05);
   box-shadow: 0 4px 14px rgba(22, 15, 41, 0.4);

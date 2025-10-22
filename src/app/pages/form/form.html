@@ -4,41 +4,75 @@
   <div class="roof-form" [ngClass]="'step-' + currentStep">
     <div class="header">
       <img src="assets/images/form-logo.webp" alt="Form Logo" class="form-logo">
-      <h1>Get your roofing quote</h1>
+      <h1>Get your moving quote</h1>
     </div>
     <div class="questions" *ngIf="currentStep === 1">
-      <div class="question">
-        <label for="roofingType">What is your roof material?</label>
-        <select id="roofingType" [(ngModel)]="roofingType" name="roofingType" required>
-          <option value="">Select an option</option>
-          <option value="1">Asphalt Shingle Roofing</option>
-          <option value="2">Cedar Shake</option>
-          <option value="3">Install Metal Roofing</option>
-          <option value="4">Install Natural Slate Roofing</option>
-          <option value="5">Tar</option>
-          <option value="6">Commercial Roofing</option>
-          <option value="7">Install Flat, Foam, or Single Ply Roofing</option>
-          <option value="8">Install Traditional Tile Roofing</option>
-          <option value="9">Install Wood or Composite Roofing</option>
-          <option value="10">Water proof coatings</option>
-          <option value="11">Roof Removal</option>
-          <option value="12">Roof Maintenance or Cleaning</option>
-          <option value="13">Other</option>
-        </select>
-        <div class="error" *ngIf="errors['roofingType']">{{ errors['roofingType'] }}</div>
-      </div>
-      <div class="question">
-        <label for="ProjectNature">What is the nature of your project?</label>
-        <select id="ProjectNature" [(ngModel)]="ProjectNature" name="ProjectNature" required>
-          <option value="">Select an option</option>
-          <option value="1">Install / New</option>
-          <option value="2">Repair</option>
-          <option value="3">Replace / Remodelling</option>
-        </select>
-        <div class="error" *ngIf="errors['ProjectNature']">{{ errors['ProjectNature'] }}</div>
+      <div class="location-container-vertical">
+        <div class="from-location">
+          <h3>Source State</h3>
+          <select [(ngModel)]="fromState" name="fromState">
+            <option value="">Select Source State</option>
+            <option *ngFor="let state of getAvailableFromStates()"
+                    [value]="state.code">
+              {{state.name}}
+            </option>
+          </select>
+          <input type="text" [(ngModel)]="fromZip" name="fromZip"
+                 (input)="onZipInput('from')"
+                 (keypress)="onZipKeyPress($event)"
+                 maxlength="5"
+                 placeholder="Origin Zip Code">
+          <div class="error" *ngIf="errors['fromState']">{{errors['fromState']}}</div>
+          <div class="error" *ngIf="errors['fromZip']">{{errors['fromZip']}}</div>
+        </div>
+
+        <button class="swap-btn-circle" (click)="swapLocations()" type="button">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-down-up" viewBox="0 0 16 16">
+  <path fill-rule="evenodd" d="M11.5 15a.5.5 0 0 0 .5-.5V2.707l3.146 3.147a.5.5 0 0 0 .708-.708l-4-4a.5.5 0 0 0-.708 0l-4 4a.5.5 0 1 0 .708.708L11 2.707V14.5a.5.5 0 0 0 .5.5m-7-14a.5.5 0 0 1 .5.5v11.793l3.146-3.147a.5.5 0 0 1 .708.708l-4 4a.5.5 0 0 1-.708 0l-4-4a.5.5 0 0 1 .708-.708L4 13.293V1.5a.5.5 0 0 1 .5-.5"/>
+</svg>
+        </button>
+
+        <div class="to-location">
+          <h3>Destination State</h3>
+          <select [(ngModel)]="toState" name="toState">
+            <option value="">Select Destination State</option>
+            <option *ngFor="let state of getAvailableToStates()"
+                    [value]="state.code">
+              {{state.name}}
+            </option>
+          </select>
+          <input type="text" [(ngModel)]="toZip" name="toZip"
+                 (input)="onZipInput('to')"
+                 (keypress)="onZipKeyPress($event)"
+                 maxlength="5"
+                 placeholder="Destination Zip Code">
+          <div class="error" *ngIf="errors['toState']">{{errors['toState']}}</div>
+          <div class="error" *ngIf="errors['toZip']">{{errors['toZip']}}</div>
+        </div>
       </div>
     </div>
     <div class="questions" *ngIf="currentStep === 2">
+      <div class="question">
+        <label for="MovingDate">Moving Date</label>
+        <input type="date" id="MovingDate" [(ngModel)]="MovingDate" name="MovingDate" required [min]="getMinDate()">
+        <div class="error" *ngIf="errors['MovingDate']">{{ errors['MovingDate'] }}</div>
+      </div>
+      <div class="question">
+        <label for="moversSize">Movers Size</label>
+        <select id="moversSize" [(ngModel)]="moversSize" name="moversSize" required>
+          <option value="">Select an option</option>
+          <option value="1">Studio</option>
+          <option value="2">1 Bedroom</option>
+          <option value="3">2 Bedrooms</option>
+          <option value="4">3 Bedrooms</option>
+          <option value="5">4 Bedrooms</option>
+          <option value="6">Over 4 Bedrooms</option>
+          <option value="7">Partial Home</option>
+        </select>
+        <div class="error" *ngIf="errors['moversSize']">{{ errors['moversSize'] }}</div>
+      </div>
+    </div>
+    <div class="questions" *ngIf="currentStep === 3">
       <div class="question">
         <label for="ProjectStatus">Project Status</label>
         <select id="ProjectStatus" [(ngModel)]="ProjectStatus" name="ProjectStatus" required>
@@ -61,7 +95,7 @@
         <div class="error" *ngIf="errors['Purchasetimeframe']">{{ errors['Purchasetimeframe'] }}</div>
       </div>
     </div>
-    <div class="questions" *ngIf="currentStep === 3">
+    <div class="questions" *ngIf="currentStep === 4">
       <div class="question">
         <label for="propertyType">Property Type</label>
         <select id="propertyType" [(ngModel)]="propertyType" name="propertyType" required>
@@ -82,7 +116,7 @@
         <div class="error" *ngIf="errors['homeOwner']">{{ errors['homeOwner'] }}</div>
       </div>
     </div>
-    <div class="questions" *ngIf="currentStep === 4">
+    <div class="questions" *ngIf="currentStep === 5">
       <div class="question">
         <label for="firstName">First Name</label>
         <input type="text" id="firstName" [(ngModel)]="firstName" name="firstName" required (keypress)="onNameKeyPress($event)">
@@ -95,6 +129,23 @@
       </div>
     </div>
     <div class="questions" *ngIf="currentStep === 6">
+      <div class="question">
+        <label for="phone">Phone</label>
+        <input type="tel" id="phone" [(ngModel)]="phone" name="phone" maxlength="10" required (keypress)="onPhoneKeyPress($event)" (input)="onPhoneInput()">
+        <div class="error" *ngIf="errors['phone']">{{ errors['phone'] }}</div>
+      </div>
+      <div class="question">
+        <label for="email">Email</label>
+        <input type="email" id="email" [(ngModel)]="email" name="email" required>
+        <div class="error" *ngIf="errors['email']">{{ errors['email'] }}</div>
+      </div>
+    </div>
+    <div class="questions" *ngIf="currentStep === 7">
+      <div class="location-buttons">
+        <button type="button" (click)="useSourceLocation()" class="location-btn">Same as Source</button>
+        <button type="button" (click)="useDestinationLocation()" class="location-btn">Same as Destination</button>
+        <button type="button" (click)="useCustomLocation()" class="location-btn">Custom</button>
+      </div>
       <div class="question">
         <label for="state">State</label>
         <select id="state" [(ngModel)]="state" name="state">
@@ -161,19 +212,7 @@
         <div class="error" *ngIf="errors['zip']">{{ errors['zip'] }}</div>
       </div>
     </div>
-    <div class="questions" *ngIf="currentStep === 5">
-      <div class="question">
-        <label for="phone">Phone</label>
-        <input type="tel" id="phone" [(ngModel)]="phone" name="phone" maxlength="10" required (keypress)="onPhoneKeyPress($event)" (input)="onPhoneInput()">
-        <div class="error" *ngIf="errors['phone']">{{ errors['phone'] }}</div>
-      </div>
-      <div class="question">
-        <label for="email">Email</label>
-        <input type="email" id="email" [(ngModel)]="email" name="email" required>
-        <div class="error" *ngIf="errors['email']">{{ errors['email'] }}</div>
-      </div>
-    </div>
-    <div class="questions" *ngIf="currentStep === 7">
+    <div class="questions" *ngIf="currentStep === 8">
       <div class="question">
         <label for="city">City</label>
         <input type="text" id="city" [(ngModel)]="city" name="city">
@@ -185,7 +224,7 @@
         <div class="error" *ngIf="errors['address']">{{ errors['address'] }}</div>
       </div>
     </div>
-    <div class="questions" *ngIf="currentStep === 8">
+    <div class="questions" *ngIf="currentStep === 9">
       <div class="question">
         <label for="Timetocall">Best Time to Call</label>
         <select id="Timetocall" [(ngModel)]="Timetocall" name="Timetocall">
@@ -203,7 +242,7 @@
         <div class="error" *ngIf="errors['BriefRequirement']">{{ errors['BriefRequirement'] }}</div>
       </div>
     </div>
-    <div class="questions" *ngIf="currentStep === 9">
+    <div class="questions" *ngIf="currentStep === 10">
       <div class="question">
         <label for="agreement" class="checkbox-label">
           <input type="checkbox" id="agreement" [(ngModel)]="agreement" name="agreement">

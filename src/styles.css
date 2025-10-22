@@ -9,4 +9,15 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  background: linear-gradient(135deg, #1e3a8a 0%, #f97316 100%);
+  color: #ffffff;
+}
+
+:root {
+  --primary-orange: #f97316;
+  --primary-blue: #1e3a8a;
+  --secondary-blue: #3b82f6;
+  --accent-orange: #fb923c;
+  --light-blue: #dbeafe;
+  --dark-blue: #1e293b;
 }
