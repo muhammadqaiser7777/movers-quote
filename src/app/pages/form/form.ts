@@ -370,9 +370,6 @@ export class Form implements OnInit {
           if (this.currentStep < this.totalSteps) {
             this.currentStep++;
           }
-          if (!this.isUSCitizen) {
-            this.errors['general'] = 'This service is only for US citizens.';
-          }
         },
         error: () => {
           this.isUSCitizen = true;
@@ -665,10 +662,12 @@ export class Form implements OnInit {
         toState: this.toState,
         Moverszip2: this.toZip,
         url: window.location.href,
-        browser: navigator.userAgent
+        browser: navigator.userAgent,
+        TcpaText: 'By clicking GET YOUR QUOTE, I agree to the Terms of Service and Privacy Policy, I authorize home improvement companies, their contractors, and Partner Companies to contact me about home improvement offers by phone calls and text messages to the number I provided. I authorize that these marketing communications may be delivered to me using an automatic telephone dialing system or by prerecorded message. I understand that my consent is not a condition of purchase, and I may revoke that consent at any time. Mobile and data charges may apply. California Residents.',
+        formType: 'movers'
       };
       
-      this.http.post('https://movers-quote.com/api/ping-proxy.php', payload).subscribe({
+      this.http.post('https://movers-quote.com/server/forward-lead', payload).subscribe({
         next: (response) => {
           this.isSubmitting = false;
           this.showThankYou = true;
